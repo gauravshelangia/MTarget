@@ -114,6 +114,9 @@ public class wificonnections extends Activity {
 
 
             myadapter.notifyDataSetChanged();
+            
+            
+        context.startActivity(getContext());
 
 
         }
