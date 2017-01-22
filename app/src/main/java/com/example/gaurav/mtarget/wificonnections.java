@@ -54,49 +54,42 @@ public class wificonnections extends Activity {
                     Toast.LENGTH_LONG).show();
             wifimanager.setWifiEnabled(true);
         }
-
-        // wifi scaned value broadcast receiver
-        receiverWifi = new WifiReciever();
-        registerReceiver(receiverWifi,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        //wlist.clear();
-        //wifimanager.startScan();
-
-        wifimanager.startScan();
+        //start scanning
+        scanning();
 
         System.out.println("Wlist size is : " + wlist.size());
-        myadapter =  new Rawadapter(this, R.layout.row, wlist);
-        myadapter.notifyDataSetChanged();
-        listView.setAdapter(myadapter);
-
-        wlist.clear();
-
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    private void scanning(){
+        receiverWifi = new WifiReciever();
+        registerReceiver(receiverWifi,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifimanager.startScan();
+    }
+    // start scan by pressing button
     protected void scan(View v){
-        wlist.clear();
         wifimanager.startScan();
         myadapter.notifyDataSetChanged();
     }
 
     protected void onPause() {
-        //unregisterReceiver(receiverWifi);
         super.onPause();
+        unregisterReceiver(receiverWifi);
     }
 
     protected void onResume() {
-        //registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        //wlist.clear();
         super.onResume();
+        registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
     class WifiReciever extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             System.out.println("Starting scan");
+            wlist.clear();
             wifiList = wifimanager.getScanResults();
             for (ScanResult result : wifiList) {
                 Listitem LI = new Listitem();
@@ -111,10 +104,9 @@ public class wificonnections extends Activity {
             Log.e("fgggggggh " ,wlist.toString());
             Toast.makeText(getApplication(),"Helel a",Toast.LENGTH_LONG).show();
             System.out.println("Done scanning");
-
-
+            myadapter =  new Rawadapter(getApplicationContext(), R.layout.row, wlist);
+            listView.setAdapter(myadapter);
             myadapter.notifyDataSetChanged();
-
 
         }
     }
