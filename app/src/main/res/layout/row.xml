@@ -6,22 +6,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#212121"
         android:id="@+id/ssid"
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/bssid"
+        android:textColor="#212121"
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/strength"
+        android:textColor="#212121"
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/freq"
+        android:textColor="#212121"
         />
 
 </LinearLayout>
