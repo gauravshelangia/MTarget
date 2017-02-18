@@ -39,6 +39,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid_detail);
 
+        // obtain permission for location and storage
+        ActivityCompat.requestPermissions(MainActivity.this,new String []{Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION}
+                ,1);
+
+
+
         // Create Directory as MTarget
         File dir = new File(Environment.getExternalStorageDirectory(),"/MTarget_Training_data");
         Log.e("File is ssi : " , dir.toString());
@@ -49,11 +56,35 @@ public class MainActivity extends AppCompatActivity {
             Log.e("file : ", dir.toString());
             Toast.makeText(this, "Training data directory doesnot exist -- creating the directry", Toast.LENGTH_SHORT).show();
         }
-
         editText = (EditText) findViewById(R.id.grid_name);
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(MainActivity.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
 
     public void scan(View v){
