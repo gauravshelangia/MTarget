@@ -101,12 +101,16 @@ public class wificonnections extends Activity {
             rssi5ghz.add(0);
         }
         //rssi.clear();
+        //System.out.println("Here collecting the result \n");
         for (Listitem l : wlist) {
             if (wifibssid.contains(l.bssid)){
+                //System.out.println("inside for loop ");
+
                 int index = wifibssid.indexOf(l.bssid);
-                System.out.println("Index is " + index);
+                //System.out.println("Index is " + index);
                 if(l.freq <= 2800 && l.freq >=1800){
                     rssi2ghz.add(index, l.strength);
+                   // System.out.println("Coming inside 2.4GHz");
                 }
                 if(l.freq <= 5500 && l.freq >=4800){
                     rssi5ghz.add(index,l.strength);
@@ -141,14 +145,14 @@ public class wificonnections extends Activity {
 
                 //write 2.4GHZ data
                 for (Integer i : rssi2ghz) {
-                    bw2ghz.write(i + " ");
+                    bw2ghz.write(i + ",");
                 }
                 bw2ghz.newLine();
                 bw2ghz.close();
 
                 // write 5GHZ data
                 for (Integer i : rssi5ghz) {
-                    bw5ghz.write(i + " ");
+                    bw5ghz.write(i + ",");
                 }
                 bw5ghz.newLine();
                 bw5ghz.close();
@@ -161,7 +165,6 @@ public class wificonnections extends Activity {
         } else {
             Toast.makeText(this, "Directory doesnot exist ", Toast.LENGTH_SHORT).show();
         }
-
 
     }
 
@@ -204,7 +207,7 @@ public class wificonnections extends Activity {
             }
             //System.out.println("Size is : "+ wlist.size());
             //Log.e("fgggggggh " ,wlist.toString());
-            Toast.makeText(getApplication(), "Size is : " + wlist.size(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplication(), "DONE SCANNING", Toast.LENGTH_LONG).show();
             System.out.println("Done scanning");
             myadapter = new Rawadapter(getApplicationContext(), R.layout.row, wlist);
             listView.setAdapter(myadapter);

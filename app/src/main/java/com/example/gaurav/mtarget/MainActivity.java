@@ -93,9 +93,13 @@ public class MainActivity extends AppCompatActivity {
 
         grid_name = editText.getText().toString();
         //System.out.println("Grid name : "+grid_name);
-
-        i.putExtra("grid_name",grid_name);
-        startActivity(i);
+        if(grid_name.equals("")){
+            //Toast.makeText(this,"You forget to enter",Toast.LENGTH_LONG);
+            editText.setError("Grid name is required");
+        }else{
+            i.putExtra("grid_name",grid_name);
+            startActivity(i);
+        }
     }
 
     public void deleteallfile(View v){

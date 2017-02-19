@@ -19,7 +19,7 @@
         android:layout_gravity="center"
         android:onClick="scan"
         android:text="Create File And Start Scan "
-        android:background="@android:color/holo_blue_light"
+        android:background="@drawable/button"
         />
 
     <Button
@@ -30,7 +30,7 @@
         android:layout_gravity="center"
         android:onClick="deleteallfile"
         android:text="Delete all files in MTarget"
-        android:background="@android:color/holo_blue_light"
+        android:background="@drawable/button"
         />
 
 </LinearLayout>

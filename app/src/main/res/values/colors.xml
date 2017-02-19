@@ -3,4 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="focussed">#41697a</color>
+    <color name="pressed">#41697a</color>
+    <color name="activity">#03A9F4</color>
+    <color name="top">@color/colorPrimary</color>
 </resources>
