@@ -212,6 +212,9 @@ public class wificonnections extends Activity {
             myadapter = new Rawadapter(getApplicationContext(), R.layout.row, wlist);
             listView.setAdapter(myadapter);
             myadapter.notifyDataSetChanged();
+            
+            
+        context.startActivity(getContext());
 
         }
     }
