@@ -6,30 +6,30 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/grid_name"
+        android:id="@+id/no_reading"
         android:layout_marginTop="10mm"
-        android:hint="Enter the room name"
+        android:hint="Enter Number of reading you want to take"
         />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/startscan"
+        android:id="@+id/starttakingreading"
         android:layout_marginTop="10mm"
         android:layout_gravity="center"
-        android:onClick="scan"
-        android:text="Create File And Start Scan "
+        android:onClick="startscanning"
+        android:text="Start taking reading"
         android:background="@drawable/button"
         />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/deleteall"
+        android:id="@+id/stoptakingreadig"
         android:layout_marginTop="10mm"
         android:layout_gravity="center"
-        android:onClick="deleteallfile"
-        android:text="Delete all files in MTarget"
+        android:onClick="stopscanning"
+        android:text="stop taking reading"
         android:background="@drawable/button"
         />
 

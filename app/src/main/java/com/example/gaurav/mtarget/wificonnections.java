@@ -107,20 +107,20 @@ public class wificonnections extends Activity {
                 //System.out.println("inside for loop ");
 
                 int index = wifibssid.indexOf(l.bssid);
-                //System.out.println("Index is " + index);
+                System.out.println("Index is " + index + "size of wifibssid is :" + no_wifi);
                 if(l.freq <= 2800 && l.freq >=1800){
-                    rssi2ghz.add(index, l.strength);
+                    rssi2ghz.set(index, l.strength);
                    // System.out.println("Coming inside 2.4GHz");
                 }
                 if(l.freq <= 5500 && l.freq >=4800){
-                    rssi5ghz.add(index,l.strength);
+                    rssi5ghz.set(index,l.strength);
                 }
             }else{
                 Log.e("NOt our wifi ","");
             }
 
         }
-
+        System.out.println("RSSI2GHZ size is : "+rssi2ghz.size());
         //TODO create the separate file for 2.4 band and for 5 GHZ band
 
         File dir = new File(Environment.getExternalStorageDirectory(), "/MTarget_Training_data");

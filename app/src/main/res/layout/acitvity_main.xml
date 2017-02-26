@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/userid"
+        android:layout_marginTop="10mm"
+        android:hint="Enter your student id "
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/username"
+        android:layout_marginTop="10mm"
+        android:hint="Enter your name"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sendandnext"
+        android:layout_marginTop="10mm"
+        android:layout_gravity="center"
+        android:onClick="sendtoserver"
+        android:text=" Next "
+        android:background="@drawable/button"
+        />
+
+</LinearLayout>
