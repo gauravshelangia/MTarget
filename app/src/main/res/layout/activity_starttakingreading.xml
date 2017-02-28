@@ -8,7 +8,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/no_reading"
         android:layout_marginTop="10mm"
-        android:hint="Enter Number of reading you want to take"
+        android:inputType="number"
+        android:hint="Enter the maximum number of reading you want to take"
         />
 
     <Button
@@ -17,7 +18,7 @@
         android:id="@+id/starttakingreading"
         android:layout_marginTop="10mm"
         android:layout_gravity="center"
-        android:onClick="startscanning"
+        android:onClick="start_coll_reading"
         android:text="Start taking reading"
         android:background="@drawable/button"
         />
@@ -28,7 +29,7 @@
         android:id="@+id/stoptakingreadig"
         android:layout_marginTop="10mm"
         android:layout_gravity="center"
-        android:onClick="stopscanning"
+        android:onClick="stop_coll_reading"
         android:text="stop taking reading"
         android:background="@drawable/button"
         />

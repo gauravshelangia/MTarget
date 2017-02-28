@@ -1,81 +1,144 @@
 package com.example.gaurav.mtarget;
 
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.util.Pair;
 
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
-/**
- * Created by gaurav on 23/2/17.
- */
-
-public class RequestServer {
-    private String ip;
-    private String address;
-    private String output=null;
-    HttpURLConnection urlConnection;
 
 
-    public RequestServer(){
-        ip = "10.100.109.196";
-    }
+public class RequestServer{
 
+   static class Senduseranddevicetoserver extends AsyncTask<Void, Void, String> {
 
-
-    //TODO complete this function
-    public boolean addrssidata(int graphnode, ArrayList<Integer> rssi){
-        address = "http://"+ip+"/MTarget_Server/add_rssi_data.php";
-        try {
-            new Sendrssidata(graphnode,rssi).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        try {
-            JSONObject jsonObject = new JSONObject(output);
-            Boolean result = Boolean.parseBoolean(jsonObject.getString("result"));
-            return result;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
-    //
-    private class Sendrssidata extends AsyncTask<Void,Void,Void> {
-        int graphnode;
-        ArrayList<Integer> rssivec;
-        Sendrssidata (Integer graphnode, ArrayList<Integer> rssivec){
-            this.graphnode = graphnode;
-            this.rssivec = rssivec;
+        private ArrayList<Pair<String,String>> data_to_send;
+        String addr;
+        Senduseranddevicetoserver(String addr, ArrayList<Pair<String,String>> data_to_send){
+            this.data_to_send = data_to_send;
+            this.addr = addr;
         }
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
+            //CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
 
-            return null;
+            StringBuilder result = new StringBuilder();
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(addr);
+                connection = (HttpURLConnection) url.openConnection();
+                //System.out.println("Response code : " + String.valueOf(connection.getResponseCode()));
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+
+                String sendquery = getQuery(data_to_send);
+                System.out.println(sendquery);
+                bw.write(sendquery);
+                bw.flush();
+                bw.close();
+
+                InputStream in = connection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                String line=null;
+
+                while ((line = reader.readLine()) != null) {
+                    System.out.println("recieved contennt is : " + line);
+                    result.append(line);
+                    System.out.println("recieved contennt is : " + line);
+                }
+                reader.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("Error in connection -- openconnection");
+                e.printStackTrace();
+            }finally {
+                //connection.disconnect();
+            }
+
+            return result.toString();
         }
+
+
+   }
+
+
+    static class Sendrssidatatoserver extends AsyncTask<Void, Void, String> {
+
+        private String data_to_send;
+        private  String addr;
+        Sendrssidatatoserver(String addr, String data_to_send){
+            this.data_to_send = data_to_send;
+            this.addr = addr;
+        }
+        @Override
+        protected String doInBackground(Void... params) {
+            //CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
+
+            StringBuilder result = new StringBuilder();
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(addr);
+                connection = (HttpURLConnection) url.openConnection();
+                //System.out.println("Response code : " + String.valueOf(connection.getResponseCode()));
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+
+                //String sendquery = getQuery(data_to_send);
+                System.out.println(data_to_send);
+                bw.write("data="+data_to_send);
+                bw.flush();
+                bw.close();
+
+                InputStream in = connection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                String line=null;
+
+                while ((line = reader.readLine()) != null) {
+                    System.out.println("recieved contennt is : " + line);
+                    result.append(line);
+                    System.out.println("recieved contennt is : " + line);
+                }
+                reader.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("Error in connection -- openconnection");
+                e.printStackTrace();
+            }finally {
+                //connection.disconnect();
+            }
+
+            return result.toString();
+        }
+
+
     }
 
+
     // Set the query format
-    private String getQuery(ArrayList<Pair<String, String>> params) throws UnsupportedEncodingException {
+    static String getQuery(ArrayList<Pair<String, String>> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         boolean first = true;
         int size  = params.size();
@@ -83,14 +146,12 @@ public class RequestServer {
             if (i!=0)
                 result.append("&");
 
-            result.append(URLEncoder.encode(params.get(i).first, "UTF-8"));
+            result.append(params.get(i).first);
             result.append("=");
-            result.append(URLEncoder.encode(params.get(i).second, "UTF-8"));
+            result.append(params.get(i).second);
         }
 
         return result.toString();
     }
-
-
 
 }

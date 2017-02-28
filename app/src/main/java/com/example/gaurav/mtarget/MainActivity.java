@@ -40,9 +40,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.example.gaurav.mtarget.RequestServer.*;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     int userid;
+    static String ip = "10.100.109.196";
     String username;
     EditText edittextuserid,edittextusername;
     Button sendtoserver;
@@ -51,12 +54,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_main);
-
-        // obtain permission for location and storage
-        ActivityCompat.requestPermissions(MainActivity.this,new String []{Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION}
-                ,1);
-
+        CookieManager cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
+        getpermission();
 
         // find the edittext
         edittextuserid = (EditText) findViewById(R.id.userid);
@@ -64,11 +64,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         // Get mac address of device
-        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wInfo = wifiManager.getConnectionInfo();
-        macaddr = wInfo.getMacAddress();
-        System.out.println("Mac address is : " + getMacAddr());
+        //WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        //WifiInfo wInfo = wifiManager.getConnectionInfo();
+        //macaddr = wInfo.getMacAddress();
+        //System.out.println("Mac address is : " + getMacAddr());
 
+        macaddr = getMacAddr();
         // get the device type = model and manufactrure
         devicemodel = android.os.Build.MODEL;
         deviceman = android.os.Build.MANUFACTURER;
@@ -94,82 +95,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         data_to_send.add(new Pair<String, String>("dev_type", devtype));
 
         // send data to server
-        new Sendtoserver(data_to_send).execute();
-    }
-
-    public class Sendtoserver extends AsyncTask<Void, Void, String> {
-
-        private ArrayList<Pair<String,String>> data_to_send;
-        Sendtoserver(ArrayList<Pair<String,String>> data_to_send){
-            this.data_to_send = data_to_send;
-        }
-        @Override
-        protected String doInBackground(Void... params) {
-            //CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
-
-            String addr = "http://10.100.109.196/MTarget_Server/add_user_device.php";
-            StringBuilder result = new StringBuilder();
-            HttpURLConnection connection = null;
-            try {
-                URL url = new URL(addr);
-                connection = (HttpURLConnection) url.openConnection();
-                //System.out.println("Response code : " + String.valueOf(connection.getResponseCode()));
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                connection.setDoInput(true);
-
-                OutputStream os = connection.getOutputStream();
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-
-                String sendquery = getQuery(data_to_send);
-                System.out.println(sendquery);
-                bw.write(sendquery);
-                bw.flush();
-                bw.close();
-
-                InputStream in = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                String line=null;
-
-                while ((line = reader.readLine()) != null) {
-                    System.out.println("recieved contennt is : " + line);
-                    result.append(line);
-                    System.out.println("recieved contennt is : " + line);
-                }
-                reader.close();
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                System.out.println("Error in connection -- openconnection");
-                e.printStackTrace();
-            }finally {
-                connection.disconnect();
-            }
-
-            return result.toString();
-        }
+        String addr = "http://"+ip+"/MTarget_Server/add_user_device.php";
+        RequestServer rs = new RequestServer();
+        RequestServer.Senduseranddevicetoserver sendtoserver = new RequestServer.Senduseranddevicetoserver(addr,data_to_send);
+        sendtoserver.execute();
+        Intent i = new Intent(getApplicationContext(),Starttakingreading.class);
+        startActivity(i);
 
 
     }
 
-    // Set the query format
-    private String getQuery(ArrayList<Pair<String, String>> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        int size  = params.size();
-        for (int i=0;i<size;i++) {
-            if (i!=0)
-                result.append("&");
-
-            result.append(params.get(i).first);
-            result.append("=");
-            result.append(params.get(i).second);
-        }
-
-        return result.toString();
+    // method to get permissions at runtime
+    public void getpermission() {
+        // obtain permission for location and storage
+        ActivityCompat.requestPermissions(MainActivity.this,new String []{Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION}
+                ,1);
     }
+
+
 
 
     public static String getMacAddr() {
