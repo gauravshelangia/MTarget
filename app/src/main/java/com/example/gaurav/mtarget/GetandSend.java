@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.Pair;
 
 import org.json.JSONArray;
@@ -23,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.example.gaurav.mtarget.MainActivity.ip;
@@ -32,13 +34,23 @@ import static com.example.gaurav.mtarget.MainActivity.ip;
  */
 
 public class GetandSend extends AsyncTask {
-    private WifiManager wifimanager;
+
+   static ArrayList<String> wifibssid = new ArrayList<>(Arrays.asList(
+            "2c:c5:d3:23:c2:3c","58:b6:33:26:53:28","58:b6:33:26:53:2c","2c:c5:d3:23:c2:38","58:b6:33:26:51:48","58:b6:33:26:56:cc"
+            ,"24:c9:a1:49:a7:28","24:c9:a1:47:29:58","24:c9:a1:47:2f:38","24:c9:a1:49:9a:c8","6c:aa:b3:48:ad:b8","24:c9:a1:49:a1:58",
+            "24:c9:a1:49:9f:08",
+            "2c:c5:d3:63:c2:3c","24:c9:a1:09:a7:28","24:c9:a1:07:29:58","24:c9:a1:09:a1:58","24:c9:a1:09:9a:c8","24:c9:a1:07:2f:38"
+            ,"58:b6:33:66:53:2c","58:b6:33:66:53:28","6c:aa:b3:08:ad:b8","2c:c5:d3:63:c2:38","58:b6:33:66:51:48","24:c9:a1:09:9f:08",
+            "58:b6:33:66:56:cc"
+    ));
+
+   static private WifiManager wifimanager;
 
     public GetandSend(WifiManager wifimanager){
         this.wifimanager = wifimanager;
     }
 
-    class WifiReciever extends BroadcastReceiver{
+    static class WifiReciever extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
             System.out.println("Starting scan");
@@ -59,8 +71,7 @@ public class GetandSend extends AsyncTask {
             //Toast.makeText(getApplication(), "DONE SCANNING", Toast.LENGTH_LONG).show();
             System.out.println("Done scanning and size of wlist is "+wlist.size());
             Pair<ArrayList<Integer>,ArrayList<Integer>> rssiv;
-            Starttakingreading str = new Starttakingreading();
-            rssiv = str.getrssivec(wlist);
+            rssiv = getrssivec(wlist);
             //sendtoserverdata(data);
             String addr = "http://"+ip+"/MTarget_Server/add_rssi_data.php";
             StringBuilder result = new StringBuilder();
@@ -95,45 +106,10 @@ public class GetandSend extends AsyncTask {
                 e.printStackTrace();
             }
 
-
-
-            try {
-                URL url = new URL(addr);
-                connection = (HttpURLConnection) url.openConnection();
-                //System.out.println("Response code : " + String.valueOf(connection.getResponseCode()));
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                connection.setDoInput(true);
-
-                OutputStream os = connection.getOutputStream();
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-
-                //String sendquery = getQuery(data_to_send);
-                System.out.println(data_to_send);
-                bw.write("data="+data_to_send);
-                bw.flush();
-                bw.close();
-
-                InputStream in = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                String line=null;
-
-                while ((line = reader.readLine()) != null) {
-                    System.out.println("recieved contennt is : " + line);
-                    result.append(line);
-                    System.out.println("recieved contennt is : " + line);
-                }
-                reader.close();
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                System.out.println("Error in connection -- openconnection");
-                e.printStackTrace();
-            }finally {
-                //connection.disconnect();
-            }
+            Starttakingreading.no_of_reading_collected++;
+            RequestServer rs = new RequestServer();
+            RequestServer.Sendrssidatatoserver sendrssi = new RequestServer.Sendrssidatatoserver(addr,data_to_send.toString());
+            sendrssi.execute();
 
         }
     }
@@ -143,5 +119,36 @@ public class GetandSend extends AsyncTask {
 
         wifimanager.startScan();
         return null;
+    }
+
+    // convert wlist into pair of rssi2ghz and rssi5ghz
+    static public Pair<ArrayList<Integer>,ArrayList<Integer>> getrssivec(ArrayList<Listitem> wlist){
+
+        Pair<ArrayList<Integer> ,ArrayList<Integer> > rssivec ;
+        int no_wifi = wifibssid.size();
+        ArrayList<Integer> rssi2ghz = new ArrayList<>();
+        ArrayList<Integer> rssi5ghz = new ArrayList<>();
+
+        for (int i=0;i<no_wifi;i++){
+            rssi2ghz.add(0);
+            rssi5ghz.add(0);
+        }
+
+        for (Listitem l : wlist) {
+            if (wifibssid.contains(l.bssid)){
+                int index = wifibssid.indexOf(l.bssid);
+                if(l.freq <= 2800 && l.freq >=1800){
+                    rssi2ghz.set(index, l.strength);
+                }
+                if(l.freq <= 5500 && l.freq >=4800){
+                    rssi5ghz.set(index,l.strength);
+                }
+            }else{
+                Log.e("NOt our wifi ","");
+            }
+        }
+
+        rssivec = new Pair<>(rssi2ghz,rssi5ghz);
+        return rssivec;
     }
 }
