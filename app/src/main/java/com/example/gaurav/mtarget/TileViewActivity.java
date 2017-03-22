@@ -21,7 +21,7 @@ public class TileViewActivity extends Activity {
         tileView.setId( R.id.tileview_id );
         tileView.setSaveEnabled( true );
 
-        setContentView( tileView );
+        //setContentView( tileView );
     }
 
     @Override

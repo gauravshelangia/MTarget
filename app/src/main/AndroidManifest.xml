@@ -25,9 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".FictionalMapTileViewActivity"/>
-
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -38,6 +35,9 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".Starttakingreading"></activity>
+        <activity android:name=".Floorto"></activity>
+        <activity android:name=".IiiitvFirstFloor"></activity>
+        <activity android:name=".IiitvGroundFloor"></activity>
     </application>
 
 </manifest>

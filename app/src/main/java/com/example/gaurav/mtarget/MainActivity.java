@@ -54,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_main);
+
+        Intent intent = new Intent(getApplicationContext(),Floorto.class);
+        startActivity(intent);
+
         CookieManager cookieManager = new CookieManager();
         CookieHandler.setDefault(cookieManager);
         getpermission();
@@ -99,8 +103,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RequestServer rs = new RequestServer();
         RequestServer.Senduseranddevicetoserver sendtoserver = new RequestServer.Senduseranddevicetoserver(addr,data_to_send);
         sendtoserver.execute();
-        Intent i = new Intent(getApplicationContext(),Starttakingreading.class);
-        startActivity(i);
+
+        //Intent intent = new Intent(getApplicationContext(),Starttakingreading.class);
+        Intent intent = new Intent(getApplicationContext(),Floorto.class);
+        startActivity(intent);
 
 
     }
