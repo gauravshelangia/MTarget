@@ -3,26 +3,20 @@ package com.example.gaurav.mtarget;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,19 +38,49 @@ public class GetandSend extends AsyncTask {
             "58:b6:33:66:56:cc"
     ));
 
-   static private WifiManager wifimanager;
+    static public WifiManager wifimanager;
+    public WifiReciever receiverWifi;
+    Context context;
+    public static int no_of_reading_collected;
 
-    public GetandSend(WifiManager wifimanager){
-        this.wifimanager = wifimanager;
+    public GetandSend(Context context){
+        this.context = context;
+        // register wifi reciever
+        wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        if(wifimanager == null)
+            Log.e("errore n " ,"wifimanager");
+        if (wifimanager.isWifiEnabled() == false) {
+            // If wifi disabled then enable it
+            Toast.makeText(context, "wifi is disabled..making it enabled",
+                    Toast.LENGTH_LONG).show();
+            wifimanager.setWifiEnabled(true);
+        }
+
+        receiverWifi = new GetandSend.WifiReciever();
+        context.registerReceiver(receiverWifi,new IntentFilter(wifimanager.SCAN_RESULTS_AVAILABLE_ACTION));
+
     }
 
-    static class WifiReciever extends BroadcastReceiver{
+    class WifiReciever extends BroadcastReceiver{
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context cont, Intent intent) {
             System.out.println("Starting scan");
+            no_of_reading_collected ++;
             ArrayList<Listitem> wlist = new ArrayList<Listitem>();
             wlist.clear();
-            List<ScanResult> wifiList  = wifimanager.getScanResults();
+            List<ScanResult> wifiList = new ArrayList<>()  ;
+
+            if(wifimanager==null){
+                Log.e("wifimanager is null","");
+            }
+            wifiList = wifimanager.getScanResults();
+
+            if(no_of_reading_collected == Starttakingreading.maxreading){
+                context.unregisterReceiver(receiverWifi);
+                System.out.println("value of no_reading is " +no_of_reading_collected);
+                Toast.makeText(context,"Done",Toast.LENGTH_LONG).show();
+                no_of_reading_collected=0;
+            }
 
             for (ScanResult result : wifiList) {
                 Listitem LI = new Listitem();
@@ -65,7 +89,7 @@ public class GetandSend extends AsyncTask {
                 LI.strength = result.level;
                 LI.freq = result.frequency;
                 wlist.add(LI);
-                System.out.println("SSID :  " + LI.ssid + "\t BSSID : " + LI.bssid + "Freq " + LI.freq);
+                //System.out.println("SSID :  " + LI.ssid + "\t BSSID : " + LI.bssid + "Freq " + LI.freq);
             }
 
             //Toast.makeText(getApplication(), "DONE SCANNING", Toast.LENGTH_LONG).show();
@@ -80,13 +104,12 @@ public class GetandSend extends AsyncTask {
             ArrayList<Integer> rssi2ghz;
             ArrayList<Integer> rssi5ghz;
 
-
             rssi2ghz = rssiv.first;
             rssi5ghz = rssiv.second;
             JSONObject data_to_send = new JSONObject();
             JSONObject rssi = new JSONObject();
             try {
-                data_to_send.put("graphnode",1);
+                data_to_send.put("graphnode",Starttakingreading.tileactual);
                 JSONArray jsonrssi2ghz = new JSONArray();
                 for(int i=0;i<rssi2ghz.size();i++){
                     jsonrssi2ghz.put(rssi2ghz.get(i));
@@ -106,7 +129,6 @@ public class GetandSend extends AsyncTask {
                 e.printStackTrace();
             }
 
-            Starttakingreading.no_of_reading_collected++;
             RequestServer rs = new RequestServer();
             RequestServer.Sendrssidatatoserver sendrssi = new RequestServer.Sendrssidatatoserver(addr,data_to_send.toString());
             sendrssi.execute();
@@ -116,8 +138,8 @@ public class GetandSend extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] params) {
-
         wifimanager.startScan();
+
         return null;
     }
 
@@ -130,8 +152,8 @@ public class GetandSend extends AsyncTask {
         ArrayList<Integer> rssi5ghz = new ArrayList<>();
 
         for (int i=0;i<no_wifi;i++){
-            rssi2ghz.add(0);
-            rssi5ghz.add(0);
+            rssi2ghz.add(-100);
+            rssi5ghz.add(-100);
         }
 
         for (Listitem l : wlist) {

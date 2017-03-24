@@ -30,12 +30,10 @@ import static com.example.gaurav.mtarget.MainActivity.ip;
 
 public class Starttakingreading extends AppCompatActivity {
 
-    private WifiManager wifimanager;
-    static int no_of_reading_collected = 0,maxreading;
-    Timer timer;
+    static int maxreading,tileactual;
+    static Timer timer;
 
     EditText editText;
-    public GetandSend.WifiReciever receiverWifi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +43,11 @@ public class Starttakingreading extends AppCompatActivity {
         // get data from previous activity i.e map acitvity
         Intent intent = getIntent();
         Bundle data = intent.getExtras();
+        tileactual = data.getInt("tileactual");
         addgraphdetail(data);
 
-        // register wifi reciever
-        wifimanager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        if (wifimanager.isWifiEnabled() == false) {
-            // If wifi disabled then enable it
-            Toast.makeText(getApplicationContext(), "wifi is disabled..making it enabled",
-                    Toast.LENGTH_LONG).show();
-            wifimanager.setWifiEnabled(true);
-        }
-
-        /* TODO write code here if the new access point added in the area --updatae wifibssid list */
-        receiverWifi = new GetandSend.WifiReciever();
-        registerReceiver(receiverWifi,new IntentFilter(wifimanager.SCAN_RESULTS_AVAILABLE_ACTION));
-
-        //send the graph detail to the server
+        // define edittext
+        editText = (EditText)findViewById(R.id.no_reading);
 
     }
 
@@ -71,31 +58,26 @@ public class Starttakingreading extends AppCompatActivity {
         if (readings != null) {
             maxreading = Integer.parseInt(readings);
         }
-
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        int i=0;
+       GetandSend gs = new GetandSend(getApplicationContext());
+       gs.execute();
+/*
+        Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Count is s s  a d " + no_of_reading_collected);
-                registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                GetandSend gs = new GetandSend(wifimanager);
+                GetandSend gs = new GetandSend(getApplicationContext());
                 gs.execute();
-                //no_of_reading_collected++;
-                if(no_of_reading_collected>=maxreading){
-                    Log.e("bas bas le liya","jitna lena tha");
-                    timer.cancel();
-                    Toast.makeText(getApplicationContext(), "Collected", Toast.LENGTH_LONG).show();
-                    no_of_reading_collected=0;
-                }
             }
-        },0,2000);
+        });
+*/
+
     }
 
     // cancel collecting reading
     public void stop_coll_reading(View v){
-        timer.cancel();
+        //timer.cancel();
         maxreading=0;
-        no_of_reading_collected=0;
+        //no_of_reading_collected=0;
         Log.d("Stop collectiing ", "lund");
 
     }
@@ -141,7 +123,6 @@ public class Starttakingreading extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
 

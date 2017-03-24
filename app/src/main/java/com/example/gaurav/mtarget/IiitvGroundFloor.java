@@ -66,12 +66,12 @@ public class IiitvGroundFloor extends TileViewActivity {
                 CoordinateTranslater coordinateTranslater = ((TileView) v).getCoordinateTranslater();
                 double x = v.getScrollX() + event.getX();
                 double y = v.getScrollY() + event.getY();
-                System.out.println("coordinate : " + x + " y :" + y);
+                //System.out.println("coordinate : " + x + " y :" + y);
 
                 double cx = coordinateTranslater.translateAndScaleAbsoluteToRelativeX((float) x, ((TileView) v).getScale());
                 double cy = coordinateTranslater.translateAndScaleAbsoluteToRelativeY((float) y, ((TileView) v).getScale());
-                System.out.println("coordinate relaticve : " + cx + " y :" + cy);
-                System.out.println("tile is : " + gettileindex(cx, cy, tilewidth, tileheight).first + ", " + gettileindex(cx, cy, tilewidth, tileheight).second);
+                //System.out.println("coordinate relaticve : " + cx + " y :" + cy);
+                //System.out.println("tile is : " + gettileindex(cx, cy, tilewidth, tileheight).first + ", " + gettileindex(cx, cy, tilewidth, tileheight).second);
 
                 //remove all previous marker
                 ((TileView) v).removeMarker(markerview);
@@ -126,7 +126,7 @@ public class IiitvGroundFloor extends TileViewActivity {
         tilewidth = detailLevel.getTileWidth();
         tileheight = detailLevel.getTileHeight();
         no_row = (int)Math.ceil (tileView.getBaseHeight() / tileheight);
-
+        //System.out.println("base height "+tileView.getBaseHeight()+"base width"+tileView.getBaseWidth());
         // frame the troll
         frameTo(1550, 1550);
 
@@ -235,7 +235,7 @@ public class IiitvGroundFloor extends TileViewActivity {
     // get tile number as unique id to store in database
     public int gettilenumber(Pair<Integer,Integer> tileindex){
         int tilenum=0;
-        System.out.println("tile index is "+tileindex.first+","+tileindex.second);
+        //System.out.println("tile index is "+tileindex.first+","+tileindex.second);
         tilenum = (tileindex.second - 1)*no_row + tileindex.first;
         return tilenum;
     }

@@ -119,9 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ,1);
     }
 
-
-
-
     public static String getMacAddr() {
         //System.out.println("inside the macaddress method");
         try {
@@ -151,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return "02:00:00:00:00:00";
     }
 
-
     // for permission of storage and location
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -178,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // permissions this app might request
         }
     }
-
 
     @Override
     public void onStart() {

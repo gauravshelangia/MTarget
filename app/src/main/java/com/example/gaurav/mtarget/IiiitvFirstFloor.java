@@ -67,8 +67,8 @@ public class IiiitvFirstFloor extends TileViewActivity {
 
                 double cx = coordinateTranslater.translateAndScaleAbsoluteToRelativeX((float) x, ((TileView) v).getScale());
                 double cy = coordinateTranslater.translateAndScaleAbsoluteToRelativeY((float) y, ((TileView) v).getScale());
-                System.out.println("coordinate relaticve : " + cx + " y :" + cy);
-                System.out.println("tile is : " + gettileindex(cx, cy, tilewidth, tileheight).first);
+                //System.out.println("coordinate relaticve : " + cx + " y :" + cy);
+                //System.out.println("tile is : " + gettileindex(cx, cy, tilewidth, tileheight).first);
 
                 //remove all previous marker
                 ((TileView) v).removeMarker(markerview);
@@ -227,8 +227,9 @@ public class IiiitvFirstFloor extends TileViewActivity {
     // get tile number as unique id to store in database
     public int gettilenumber(Pair<Integer, Integer> tileindex) {
         int tilenum = 0;
-        System.out.println("tile index"+tileindex.first +", " +tileindex.second+"number of row" + no_row);
-        tilenum = (tileindex.second - 1) * no_row + tileindex.first;
+        //System.out.println("tile index"+tileindex.first +", " +tileindex.second+"number of row" + no_row);
+        //624 number of tiles on ground floor
+        tilenum = 624 + (tileindex.second - 1) * no_row + tileindex.first;
         return tilenum;
     }
 
