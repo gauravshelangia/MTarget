@@ -45,7 +45,8 @@ import static com.example.gaurav.mtarget.RequestServer.*;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     int userid;
-    static String ip = "10.100.109.196";
+    static String ip = "ec2-35-154-36-86.ap-south-1.compute.amazonaws.com";
+    //static String ip = "10.100.109.196";
     String username;
     EditText edittextuserid,edittextusername;
     Button sendtoserver;
@@ -55,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitvity_main);
 
-        Intent intent = new Intent(getApplicationContext(),Floorto.class);
-        startActivity(intent);
+        //Intent intent = new Intent(getApplicationContext(),Floorto.class);
+        //startActivity(intent);
 
         CookieManager cookieManager = new CookieManager();
         CookieHandler.setDefault(cookieManager);
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // find the edittext
         edittextuserid = (EditText) findViewById(R.id.userid);
         edittextusername = (EditText) findViewById(R.id.username);
-
 
         // Get mac address of device
         //WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);

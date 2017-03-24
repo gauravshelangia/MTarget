@@ -42,6 +42,12 @@ public class Starttakingreading extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starttakingreading);
 
+        // get data from previous activity i.e map acitvity
+        Intent intent = getIntent();
+        Bundle data = intent.getExtras();
+
+        addgraphdetail(data);
+
         // register wifi reciever
         wifimanager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         if (wifimanager.isWifiEnabled() == false) {
@@ -55,8 +61,9 @@ public class Starttakingreading extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.no_reading);
         receiverWifi = new GetandSend.WifiReciever();
         registerReceiver(receiverWifi,new IntentFilter(wifimanager.SCAN_RESULTS_AVAILABLE_ACTION));
-        if(no_of_reading_collected==3)
-            Log.e("Value of reading" , String.valueOf(no_of_reading_collected) );
+
+        //send the graph detail to the server
+
     }
 
     // press button
@@ -92,6 +99,41 @@ public class Starttakingreading extends AppCompatActivity {
 
     }
 
+    //add graph detail
+    public void addgraphdetail(Bundle data){
+        String addr = "http://"+ip+"/MTarget_Server/add_graph_detail.php";
+        String detail = data.getString("tiledetail");
+        int tile = data.getInt("tileactual");
+        ArrayList<Integer> adjacent = new ArrayList<>();
+        adjacent.add(data.getInt("tileleft"));
+        adjacent.add(data.getInt("tileright"));
+        adjacent.add(data.getInt("tileup"));
+        adjacent.add(data.getInt("tiledown"));
+
+        JSONObject datatosend = new JSONObject();
+        try {
+            datatosend.put("graphnode",tile);
+            datatosend.put("detail",detail);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONArray jsonadjacent = new JSONArray();
+        int size = adjacent.size();
+        for(int i=0; i<size;i++){
+            jsonadjacent.put(adjacent.get(i));
+        }
+
+        try {
+            datatosend.put("adjacentnode",jsonadjacent);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestServer rs = new RequestServer();
+        RequestServer.Sendrssidatatoserver sendrssi = new RequestServer.Sendrssidatatoserver(addr,datatosend.toString());
+        sendrssi.execute();
+    }
 
     protected void onPause() {
         super.onPause();}
