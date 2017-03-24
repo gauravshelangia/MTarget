@@ -28,7 +28,6 @@ public class IiitvGroundFloor extends TileViewActivity {
     private View markerviewleft, markerviewright, markerviewup, markerviewdown;
     int no_row=0;
     int tileactual=-1, tileleft = -1, tileright = -1, tileup = -1, tiledown = -1;
-    private EditText editText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +125,7 @@ public class IiitvGroundFloor extends TileViewActivity {
 
         tilewidth = detailLevel.getTileWidth();
         tileheight = detailLevel.getTileHeight();
-        no_row = (int) (tileView.getWidth()/tilewidth);
+        no_row = (int)Math.ceil (tileView.getBaseHeight() / tileheight);
 
         // frame the troll
         frameTo(1550, 1550);
@@ -136,8 +135,8 @@ public class IiitvGroundFloor extends TileViewActivity {
 
     }
 
-    public void gotostartreading(View view){
-        Intent intent = new Intent(getApplicationContext(),Starttakingreading.class);
+    public void addtiledetail(View view){
+        Intent intent = new Intent(getApplicationContext(),Addtiledetail.class);
         Bundle data = new Bundle();
         data.putInt("tileactual",tileactual);
         data.putInt("tileleft",tileleft);
@@ -145,10 +144,6 @@ public class IiitvGroundFloor extends TileViewActivity {
         data.putInt("tileup",tileup);
         data.putInt("tiledown",tiledown);
 
-        editText = (EditText)findViewById(R.id.tiledetail);
-        String tiledetail = editText.getText().toString();
-
-        data.putString("tiledetail",tiledetail);
         intent.putExtras(data);
         startActivity(intent);
     }
@@ -168,10 +163,13 @@ public class IiitvGroundFloor extends TileViewActivity {
         imageView.setLayoutParams(params);
         imageView.setImageResource(resId);
         Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
-        tileleft = gettilenumber(tilenum);
         //coordinate of left tile
         double xleft = tilewidth * tilenum.first - 3 * tilewidth / 2;
         double yleft = tileheight * tilenum.second - tilewidth / 2;
+
+        Pair<Integer, Integer> tilenum1 = gettileindex(xleft, yleft, tilewidth, tileheight);
+        tileleft = gettilenumber(tilenum1);
+
         markerviewleft = getTileView().addMarker(imageView, xleft, yleft, null, null);
     }
 
@@ -181,12 +179,13 @@ public class IiitvGroundFloor extends TileViewActivity {
         imageView.setLayoutParams(params);
         imageView.setImageResource(resId);
         Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
-
-        tileright = gettilenumber(tilenum);
-
         //coordinate of right tile
         double xright = tilewidth * tilenum.first + tilewidth / 2;
         double yright = tileheight * tilenum.second - tilewidth / 2;
+
+        Pair<Integer, Integer> tilenum1 = gettileindex(xright, yright, tilewidth, tileheight);
+        tileright = gettilenumber(tilenum1);
+
         markerviewright = getTileView().addMarker(imageView, xright, yright, null, null);
     }
 
@@ -197,11 +196,12 @@ public class IiitvGroundFloor extends TileViewActivity {
         imageView.setImageResource(resId);
         Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
 
-        tileup = gettilenumber(tilenum);
-
         //coordinate of upper tile
         double xup = tilewidth * tilenum.first - tilewidth / 2;
         double yup = tileheight * tilenum.second - 3 * tilewidth / 2;
+
+        Pair<Integer, Integer> tilenum1 = gettileindex(xup, yup, tilewidth, tileheight);
+        tileup = gettilenumber(tilenum1);
 
         markerviewright = getTileView().addMarker(imageView, xup, yup, null, null);
     }
@@ -213,12 +213,13 @@ public class IiitvGroundFloor extends TileViewActivity {
         imageView.setImageResource(resId);
         Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
 
-        tiledown = gettilenumber(tilenum);
-
-
         //coordinate of down tile
         double xdown = tilewidth * tilenum.first - tilewidth / 2;
         double ydown = tileheight * tilenum.second + tilewidth / 2;
+
+        Pair<Integer, Integer> tilenum1 = gettileindex(xdown, ydown, tilewidth, tileheight);
+        tiledown = gettilenumber(tilenum1);
+
         markerviewright = getTileView().addMarker(imageView, xdown, ydown, null, null);
     }
 
@@ -234,6 +235,7 @@ public class IiitvGroundFloor extends TileViewActivity {
     // get tile number as unique id to store in database
     public int gettilenumber(Pair<Integer,Integer> tileindex){
         int tilenum=0;
+        System.out.println("tile index is "+tileindex.first+","+tileindex.second);
         tilenum = (tileindex.second - 1)*no_row + tileindex.first;
         return tilenum;
     }

@@ -7,15 +7,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gotostartreading"
-        android:onClick="gotostartreading"
-        android:text="Take reading"
+        android:onClick="addtiledetail"
+        android:text="Add Tile detail"
+        android:layout_marginTop="5dp"
         android:background="@drawable/button"
-        android:layout_below="@+id/tiledetail"
-        />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Enter detail"
-        android:id="@+id/tiledetail"
         />
 </RelativeLayout>

@@ -34,10 +34,11 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".Starttakingreading"></activity>
-        <activity android:name=".Floorto"></activity>
-        <activity android:name=".IiiitvFirstFloor"></activity>
-        <activity android:name=".IiitvGroundFloor"></activity>
+        <activity android:name=".Starttakingreading" />
+        <activity android:name=".Floorto" />
+        <activity android:name=".IiiitvFirstFloor" />
+        <activity android:name=".IiitvGroundFloor" />
+        <activity android:name=".Addtiledetail"></activity>
     </application>
 
 </manifest>

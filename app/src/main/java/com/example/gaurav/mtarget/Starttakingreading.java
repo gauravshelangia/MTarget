@@ -45,7 +45,6 @@ public class Starttakingreading extends AppCompatActivity {
         // get data from previous activity i.e map acitvity
         Intent intent = getIntent();
         Bundle data = intent.getExtras();
-
         addgraphdetail(data);
 
         // register wifi reciever
@@ -58,7 +57,6 @@ public class Starttakingreading extends AppCompatActivity {
         }
 
         /* TODO write code here if the new access point added in the area --updatae wifibssid list */
-        editText = (EditText) findViewById(R.id.no_reading);
         receiverWifi = new GetandSend.WifiReciever();
         registerReceiver(receiverWifi,new IntentFilter(wifimanager.SCAN_RESULTS_AVAILABLE_ACTION));
 
@@ -68,6 +66,7 @@ public class Starttakingreading extends AppCompatActivity {
 
     // press button
     public void start_coll_reading(View view) {
+
         String readings = editText.getText().toString();
         if (readings != null) {
             maxreading = Integer.parseInt(readings);
@@ -85,6 +84,8 @@ public class Starttakingreading extends AppCompatActivity {
                 if(no_of_reading_collected>=maxreading){
                     Log.e("bas bas le liya","jitna lena tha");
                     timer.cancel();
+                    Toast.makeText(getApplicationContext(), "Collected", Toast.LENGTH_LONG).show();
+                    no_of_reading_collected=0;
                 }
             }
         },0,2000);

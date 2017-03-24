@@ -56,8 +56,8 @@ public class GetandSend extends AsyncTask {
             System.out.println("Starting scan");
             ArrayList<Listitem> wlist = new ArrayList<Listitem>();
             wlist.clear();
-            List<ScanResult> wifiList;
-            wifiList = wifimanager.getScanResults();
+            List<ScanResult> wifiList  = wifimanager.getScanResults();
+
             for (ScanResult result : wifiList) {
                 Listitem LI = new Listitem();
                 LI.ssid = result.SSID;
