@@ -59,6 +59,7 @@ public class Starttakingreading extends AppCompatActivity {
             maxreading = Integer.parseInt(readings);
         }
         int i=0;
+
        GetandSend gs = new GetandSend(getApplicationContext());
        gs.execute();
 /*

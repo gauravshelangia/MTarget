@@ -74,24 +74,24 @@ public class IiitvGroundFloor extends TileViewActivity {
                 //System.out.println("tile is : " + gettileindex(cx, cy, tilewidth, tileheight).first + ", " + gettileindex(cx, cy, tilewidth, tileheight).second);
 
                 //remove all previous marker
-                ((TileView) v).removeMarker(markerview);
+                //((TileView) v).removeMarker(markerview);
                 //((TileView) v).removeMarker(markerviewleft);
                 //((TileView) v).removeMarker(markerviewright);
                 //((TileView) v).removeMarker(markerviewup);
                 //((TileView) v).removeMarker(markerviewdown);
 
                 // again place the marker
-                placeMarker(R.drawable.reddot, cx, cy);
-                placeMarkeronleft(R.drawable.reddot, cx, cy);
-                placeMarkeronright(R.drawable.reddot, cx, cy);
-                placeMarkerondown(R.drawable.reddot, cx, cy);
-                placeMarkeronup(R.drawable.reddot, cx, cy);
+                placeMarker(R.drawable.reds, cx, cy);
+                placeMarkeronleft(R.drawable.green, cx, cy);
+                placeMarkeronright(R.drawable.green, cx, cy);
+                placeMarkerondown(R.drawable.green, cx, cy);
+                placeMarkeronup(R.drawable.green, cx, cy);
 
                 return false;
             }
         });
 
-
+/*
         // set markerTap listener
         tileView.setMarkerTapListener(new MarkerLayout.MarkerTapListener() {
             @Override
@@ -118,7 +118,7 @@ public class IiitvGroundFloor extends TileViewActivity {
                 callout.setSubtitle("Info window at coordinate:\n" + position[1] + ", " + position[0]);
             }
         });
-
+*/
 
         DetailLevelManager detailLevelManager = tileView.getDetailLevelManager();
         DetailLevel detailLevel = detailLevelManager.getCurrentDetailLevel();
@@ -150,22 +150,30 @@ public class IiitvGroundFloor extends TileViewActivity {
 
     private void placeMarker(int resId, double x, double y) {
         ImageView imageView = new ImageView(this);
-        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams(256, 256);
+        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams((int)(tilewidth*getTileView().getScale())-10, (int)(tileheight*getTileView().getScale())-10);
         imageView.setLayoutParams(params);
         imageView.setImageResource(resId);
-        tileactual = gettilenumber(gettileindex(x,y,tilewidth,tileheight));
-        markerview = getTileView().addMarker(imageView, x, y, null, null);
+
+        Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
+
+        //coordinate of left tile
+        double xon = tilewidth * tilenum.first - tilewidth / 2;
+        double yon = tileheight * tilenum.second - tileheight / 2;
+
+
+        tileactual = gettilenumber(gettileindex(xon,yon,tilewidth,tileheight));
+        markerview = getTileView().addMarker(imageView, xon, yon, null, null);
     }
 
     private void placeMarkeronleft(int resId, double x, double y) {
         ImageView imageView = new ImageView(this);
-        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams(356, 356);
+        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams((int)(tilewidth*getTileView().getScale())-10, (int)(tileheight*getTileView().getScale())-10);
         imageView.setLayoutParams(params);
         imageView.setImageResource(resId);
         Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
         //coordinate of left tile
         double xleft = tilewidth * tilenum.first - 3 * tilewidth / 2;
-        double yleft = tileheight * tilenum.second - tilewidth / 2;
+        double yleft = tileheight * tilenum.second - tileheight / 2;
 
         Pair<Integer, Integer> tilenum1 = gettileindex(xleft, yleft, tilewidth, tileheight);
         tileleft = gettilenumber(tilenum1);
@@ -175,13 +183,13 @@ public class IiitvGroundFloor extends TileViewActivity {
 
     private void placeMarkeronright(int resId, double x, double y) {
         ImageView imageView = new ImageView(this);
-        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams(356, 356);
+        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams((int)(tilewidth*getTileView().getScale())-10, (int)(tileheight*getTileView().getScale())-10);
         imageView.setLayoutParams(params);
         imageView.setImageResource(resId);
         Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
         //coordinate of right tile
         double xright = tilewidth * tilenum.first + tilewidth / 2;
-        double yright = tileheight * tilenum.second - tilewidth / 2;
+        double yright = tileheight * tilenum.second - tileheight / 2;
 
         Pair<Integer, Integer> tilenum1 = gettileindex(xright, yright, tilewidth, tileheight);
         tileright = gettilenumber(tilenum1);
@@ -191,14 +199,14 @@ public class IiitvGroundFloor extends TileViewActivity {
 
     private void placeMarkeronup(int resId, double x, double y) {
         ImageView imageView = new ImageView(this);
-        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams(356, 356);
+        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams((int)(tilewidth*getTileView().getScale())-10, (int)(tileheight*getTileView().getScale())-10);
         imageView.setLayoutParams(params);
         imageView.setImageResource(resId);
         Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
 
         //coordinate of upper tile
         double xup = tilewidth * tilenum.first - tilewidth / 2;
-        double yup = tileheight * tilenum.second - 3 * tilewidth / 2;
+        double yup = tileheight * tilenum.second - 3 * tileheight / 2;
 
         Pair<Integer, Integer> tilenum1 = gettileindex(xup, yup, tilewidth, tileheight);
         tileup = gettilenumber(tilenum1);
@@ -208,14 +216,14 @@ public class IiitvGroundFloor extends TileViewActivity {
 
     private void placeMarkerondown(int resId, double x, double y) {
         ImageView imageView = new ImageView(this);
-        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams(356, 356);
+        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams((int)(tilewidth*getTileView().getScale())-10, (int)(tileheight*getTileView().getScale())-10);
         imageView.setLayoutParams(params);
         imageView.setImageResource(resId);
         Pair<Integer, Integer> tilenum = gettileindex(x, y, tilewidth, tileheight);
 
         //coordinate of down tile
         double xdown = tilewidth * tilenum.first - tilewidth / 2;
-        double ydown = tileheight * tilenum.second + tilewidth / 2;
+        double ydown = tileheight * tilenum.second + tileheight / 2;
 
         Pair<Integer, Integer> tilenum1 = gettileindex(xdown, ydown, tilewidth, tileheight);
         tiledown = gettilenumber(tilenum1);
