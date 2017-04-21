@@ -21,7 +21,7 @@ public class IiiitvFirstFloor extends TileViewActivity {
     double tilewidth;
     double tileheight;
     View markerview;
-    int no_row;
+    int no_row,no_col;
     public View markerviewleft, markerviewright, markerviewup, markerviewdown;
     int tileactual = -1, tileleft = -1, tileright = -1, tileup = -1, tiledown = -1;
     private EditText editText;
@@ -63,12 +63,12 @@ public class IiiitvFirstFloor extends TileViewActivity {
                 CoordinateTranslater coordinateTranslater = ((TileView) v).getCoordinateTranslater();
                 double x = v.getScrollX() + event.getX();
                 double y = v.getScrollY() + event.getY();
-                System.out.println("coordinate : " + x + " y :" + y);
+                //System.out.println("coordinate : " + x + " y :" + y);
 
                 double cx = coordinateTranslater.translateAndScaleAbsoluteToRelativeX((float) x, ((TileView) v).getScale());
                 double cy = coordinateTranslater.translateAndScaleAbsoluteToRelativeY((float) y, ((TileView) v).getScale());
                 //System.out.println("coordinate relaticve : " + cx + " y :" + cy);
-                //System.out.println("tile is : " + gettileindex(cx, cy, tilewidth, tileheight).first);
+               // System.out.println("tile is : " + gettileindex(cx, cy, tilewidth, tileheight).first + ", " + gettileindex(cx, cy, tilewidth, tileheight).second);
 
                 /*)
                 //remove all previous marker
@@ -124,6 +124,7 @@ public class IiiitvFirstFloor extends TileViewActivity {
         tilewidth = detailLevel.getTileWidth();
         tileheight = detailLevel.getTileHeight();
         no_row = (int)Math.ceil (tileView.getBaseHeight() / tileheight);
+        no_col = (int) Math.ceil(tileView.getBaseWidth()/tilewidth);
 
         // frame the troll
         frameTo(1550, 1550);
@@ -157,6 +158,9 @@ public class IiiitvFirstFloor extends TileViewActivity {
         double yon = tileheight * tilenum.second - tileheight / 2;
 
         tileactual = gettilenumber(gettileindex(x,y,tilewidth,tileheight));
+        //System.out.println("actual tile is " + tileactual);
+        //System.out.println("tile index is "+tilenum.first+","+tilenum.second);
+
         markerview = getTileView().addMarker(imageView, xon, yon, null, null);
     }
 
@@ -238,9 +242,9 @@ public class IiiitvFirstFloor extends TileViewActivity {
     // get tile number as unique id to store in database
     public int gettilenumber(Pair<Integer, Integer> tileindex) {
         int tilenum = 0;
-        //System.out.println("tile index"+tileindex.first +", " +tileindex.second+"number of row" + no_row);
+        //System.out.println("tile index is "+tileindex.first+","+tileindex.second);
         //624 number of tiles on ground floor
-        tilenum = 624 + (tileindex.second - 1) * no_row + tileindex.first;
+        tilenum = 624 + (tileindex.second - 1) * no_col + tileindex.first;
         return tilenum;
     }
 

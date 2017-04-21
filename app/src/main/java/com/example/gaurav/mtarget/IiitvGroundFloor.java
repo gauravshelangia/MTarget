@@ -26,7 +26,7 @@ public class IiitvGroundFloor extends TileViewActivity {
     double tileheight;
     View markerview;
     private View markerviewleft, markerviewright, markerviewup, markerviewdown;
-    int no_row=0;
+    int no_row=0,no_col=0;
     int tileactual=-1, tileleft = -1, tileright = -1, tileup = -1, tiledown = -1;
 
     @Override
@@ -126,6 +126,8 @@ public class IiitvGroundFloor extends TileViewActivity {
         tilewidth = detailLevel.getTileWidth();
         tileheight = detailLevel.getTileHeight();
         no_row = (int)Math.ceil (tileView.getBaseHeight() / tileheight);
+        no_col = (int) Math.ceil(tileView.getBaseWidth()/tilewidth);
+        //System.out.println("number of row and col is " + no_row + "   " + no_col);
         //System.out.println("base height "+tileView.getBaseHeight()+"base width"+tileView.getBaseWidth());
         // frame the troll
         frameTo(1550, 1550);
@@ -162,6 +164,7 @@ public class IiitvGroundFloor extends TileViewActivity {
 
 
         tileactual = gettilenumber(gettileindex(xon,yon,tilewidth,tileheight));
+        //System.out.println("actual tile is " + tileactual);
         markerview = getTileView().addMarker(imageView, xon, yon, null, null);
     }
 
@@ -233,7 +236,6 @@ public class IiitvGroundFloor extends TileViewActivity {
 
     // get tile index as col and row number
     private Pair<Integer, Integer> gettileindex(double x, double y, double tilewidth, double tileheight) {
-        String tile;
         int X = (int) Math.ceil(x / tilewidth);
         int Y = (int) Math.ceil(y / tileheight);
         Pair<Integer, Integer> tile_no = new Pair<>(X, Y);
@@ -244,7 +246,7 @@ public class IiitvGroundFloor extends TileViewActivity {
     public int gettilenumber(Pair<Integer,Integer> tileindex){
         int tilenum=0;
         //System.out.println("tile index is "+tileindex.first+","+tileindex.second);
-        tilenum = (tileindex.second - 1)*no_row + tileindex.first;
+        tilenum = (tileindex.second - 1)*no_col + tileindex.first;
         return tilenum;
     }
 

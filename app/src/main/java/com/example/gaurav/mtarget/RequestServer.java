@@ -56,9 +56,9 @@ public class RequestServer{
                 String line=null;
 
                 while ((line = reader.readLine()) != null) {
-                    System.out.println("recieved contennt is : " + line);
+                    //System.out.println("recieved contennt is : " + line);
                     result.append(line);
-                    System.out.println("recieved contennt is : " + line);
+                    //System.out.println("recieved contennt is : " + line);
                 }
                 reader.close();
 

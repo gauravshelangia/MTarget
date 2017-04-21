@@ -64,7 +64,7 @@ public class GetandSend extends AsyncTask {
     class WifiReciever extends BroadcastReceiver{
         @Override
         public void onReceive(Context cont, Intent intent) {
-            System.out.println("Starting scan");
+            //System.out.println("Starting scan");
             no_of_reading_collected ++;
             ArrayList<Listitem> wlist = new ArrayList<Listitem>();
             wlist.clear();
@@ -75,9 +75,11 @@ public class GetandSend extends AsyncTask {
             }
             wifiList = wifimanager.getScanResults();
 
+            Toast.makeText(context,"Collected :" + no_of_reading_collected,Toast.LENGTH_LONG).show();
+
             if(no_of_reading_collected == Starttakingreading.maxreading){
                 context.unregisterReceiver(receiverWifi);
-                System.out.println("value of no_reading is " +no_of_reading_collected);
+                //System.out.println("value of no_reading is " +no_of_reading_collected);
                 Toast.makeText(context,"Done",Toast.LENGTH_LONG).show();
                 no_of_reading_collected=0;
             }
@@ -93,7 +95,7 @@ public class GetandSend extends AsyncTask {
             }
 
             //Toast.makeText(getApplication(), "DONE SCANNING", Toast.LENGTH_LONG).show();
-            System.out.println("Done scanning and size of wlist is "+wlist.size());
+            //System.out.println("Done scanning and size of wlist is "+wlist.size());
             Pair<ArrayList<Integer>,ArrayList<Integer>> rssiv;
             rssiv = getrssivec(wlist);
             //sendtoserverdata(data);
