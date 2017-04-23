@@ -75,7 +75,7 @@ public class GetandSend extends AsyncTask {
             }
             wifiList = wifimanager.getScanResults();
 
-            Toast.makeText(context,"Collected :" + no_of_reading_collected,Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"Collected :" + no_of_reading_collected,Toast.LENGTH_SHORT).show();
 
             if(no_of_reading_collected == Starttakingreading.maxreading){
                 context.unregisterReceiver(receiverWifi);
