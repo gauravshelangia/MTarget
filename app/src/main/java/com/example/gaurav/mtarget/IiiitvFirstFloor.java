@@ -42,7 +42,7 @@ public class IiiitvFirstFloor extends TileViewActivity {
         tileView.setShouldRenderWhilePanning(true);
 
         // detail levels
-        tileView.addDetailLevel(1.000f, "images_first_5000_23_26/%d_%d.png", 118, 123);
+        tileView.addDetailLevel(1.00f, "images_first_5000_23_26/%d_%d.png", 118, 123);
 
         tileView.setScaleLimits(5, 5);
         // disable zooming
@@ -80,12 +80,12 @@ public class IiiitvFirstFloor extends TileViewActivity {
                 */
 
                 // place all the marker
-                placeMarker(R.drawable.reds, cx, cy);
+                placeMarker(R.drawable.green, cx, cy);
                 placeMarkeronleft(v, R.drawable.green, cx, cy);
                 placeMarkeronright(v, R.drawable.green, cx, cy);
                 placeMarkerondown(v, R.drawable.green, cx, cy);
                 placeMarkeronup(v, R.drawable.green, cx, cy);
-
+                //adddot(R.drawable.reddot,cx,cy);
                 return false;
             }
         });
@@ -230,6 +230,17 @@ public class IiiitvFirstFloor extends TileViewActivity {
         markerviewright = getTileView().addMarker(imageView, xdown, ydown, null, null);
     }
 
+    private void adddot(int resId, double x, double y) {
+        ImageView imageView = new ImageView(this);
+        MarkerLayout.LayoutParams params = new MarkerLayout.LayoutParams(300,300);
+        imageView.setLayoutParams(params);
+        imageView.setImageResource(resId);
+
+        //System.out.println("actual tile is " + tileactual);
+        //System.out.println("tile index is "+tilenum.first+","+tilenum.second);
+
+        getTileView().addMarker(imageView, x, y, null, null);
+    }
 
     private Pair<Integer, Integer> gettileindex(double x, double y, double tilewidth, double tileheight) {
         String tile;
